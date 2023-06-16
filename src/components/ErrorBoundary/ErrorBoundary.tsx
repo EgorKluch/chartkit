@@ -1,27 +1,16 @@
 import React from 'react';
 import type {ChartKitError} from '../../libs';
-import type {ChartKitOnError} from '../../types';
+import type {ChartKitOnError, ChartKitRenderError} from '../../types';
 import {getErrorMessage} from '../../utils/getErrorMessage';
 
 type Props = {
     onError?: ChartKitOnError;
-    resetError?(resetError: () => void): void;
-    renderErrorView?: ErrorBoundaryRenderErrorView;
+    renderError?: ChartKitRenderError;
 };
 
 type State = {
     error?: ChartKitError | Error;
 };
-
-export type ErrorBoundaryRenderErrorViewOpts = {
-    message: string;
-    error: ChartKitError | Error;
-    resetError: () => void;
-};
-
-export type ErrorBoundaryRenderErrorView = (
-    opts: ErrorBoundaryRenderErrorViewOpts,
-) => React.ReactNode;
 
 export class ErrorBoundary extends React.Component<Props, State> {
     static getDerivedStateFromError(error: Error) {
@@ -35,10 +24,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
     componentDidCatch() {
         const {error} = this.state;
 
-        this.props.resetError?.(() => {
-            this.setState({error: undefined});
-        });
-
         if (error) {
             this.props.onError?.({error});
         }
@@ -46,12 +31,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     render() {
         const {error} = this.state;
+        const {renderError} = this.props;
 
         if (error) {
             const message = getErrorMessage(error);
 
-            if (this.props.renderErrorView) {
-                return this.props.renderErrorView({
+            if (renderError) {
+                return renderError({
                     error,
                     message,
                     resetError: () => {

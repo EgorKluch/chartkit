@@ -1,12 +1,11 @@
 import React from 'react';
 import {Button} from '@gravity-ui/uikit';
-import {ChartKitRef} from '../../../../types';
+import {ChartKitRef, ChartKitRenderError} from '../../../../types';
 import {settings} from '../../../../libs';
 import {HighchartsPlugin} from '../../index';
 import holidays from '../../mocks/holidays';
 import {ChartKit} from '../../../../components/ChartKit';
 import {HighchartsWidgetData} from '../../types';
-import {ErrorBoundaryRenderErrorView} from '../../../../components/ErrorBoundary/ErrorBoundary';
 
 const DEFAULT_STORY_HEIGHT = '300px';
 const DEFAULT_STORY_WIDTH = '100%';
@@ -18,7 +17,7 @@ export type ChartStoryProps = {
     visible?: boolean;
     height?: string;
     width?: string;
-    renderErrorView?: ErrorBoundaryRenderErrorView;
+    renderError?: ChartKitRenderError;
 };
 export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) => {
     const {height, width, data} = props;
@@ -49,7 +48,7 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
                 ref={chartKitRef}
                 type="highcharts"
                 data={data}
-                renderErrorView={props.renderErrorView}
+                renderError={props.renderError}
             />
         </div>
     );

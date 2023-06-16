@@ -3,11 +3,11 @@ import {Meta, Story} from '@storybook/react';
 import {ChartKit} from '../../../../components/ChartKit';
 import {ChartStory} from '../components/ChartStory';
 import {Button} from '@gravity-ui/uikit';
-import {ErrorBoundaryRenderErrorView} from '../../../../components/ErrorBoundary/ErrorBoundary';
 import {CHARTKIT_ERROR_CODE, settings} from '../../../../libs';
 import {HighchartsPlugin} from '../../index';
 import holidays from '../../mocks/holidays';
 import {noData, filledData} from '../../mocks/custom-error-render';
+import type {ChartKitRenderError} from '../../../../types';
 
 export default {
     title: 'Plugins/Highcharts/CustomErrorRender',
@@ -17,7 +17,7 @@ export default {
 const Template: Story = () => {
     const [data, setData] = React.useState(noData);
 
-    const renderErrorView: ErrorBoundaryRenderErrorView = React.useCallback(
+    const renderErrorView: ChartKitRenderError = React.useCallback(
         ({error, message, resetError}) => {
             function renderFixButton() {
                 if (!('code' in error)) {
@@ -41,6 +41,7 @@ const Template: Story = () => {
                             <Button
                                 onClick={() => {
                                     setData(filledData);
+                                    resetError();
                                 }}
                             >
                                 Add data
@@ -67,7 +68,7 @@ const Template: Story = () => {
                 withoutPlugin={true}
                 data={data}
                 visible={true}
-                renderErrorView={renderErrorView}
+                renderError={renderErrorView}
             />
         </div>
     );

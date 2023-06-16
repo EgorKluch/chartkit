@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type {ChartKitWidget} from './widget';
-import type {ErrorBoundaryRenderErrorView} from '../components/ErrorBoundary/ErrorBoundary';
+import {ChartKitError} from '../libs';
 
 export type {ChartKitHolidays} from './misc';
 
@@ -32,6 +32,14 @@ export type ChartKitOnChartLoad<T extends ChartKitType> = {
 
 export type ChartKitOnError = (data: {error: any}) => void;
 
+export type ChartKitRenderErrorOpts = {
+    message: string;
+    error: ChartKitError | Error;
+    resetError: () => void;
+};
+
+export type ChartKitRenderError = (opts: ChartKitRenderErrorOpts) => React.ReactNode;
+
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
     data: ChartKitWidget[T]['data'];
@@ -49,7 +57,7 @@ export type ChartKitProps<T extends ChartKitType> = {
      * @param data
      */
     onChartLoad?: (data: ChartKitOnChartLoad<T>) => void;
-    renderErrorView?: ErrorBoundaryRenderErrorView;
+    renderError?: ChartKitRenderError;
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 
